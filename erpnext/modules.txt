@@ -18,10 +18,6 @@ Communication
 Loan Management
 Telephony
 Bulk Transaction
-<<<<<<< HEAD
 E-commerce
 Subcontracting
-=======
-Subcontracting
 EDI
->>>>>>> 2a8dbc5cd5 (feat: new DocTypes "Code List" and "Common Code" (#43425))
