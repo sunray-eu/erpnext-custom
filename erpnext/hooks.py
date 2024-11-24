@@ -426,6 +426,9 @@ scheduler_events = {
 			"erpnext.stock.reorder_item.reorder_item",
 		],
 	},
+	"all": [
+		"erpnext.projects.doctype.project.project.sync_project_user_access",
+	],
 	"hourly": [
 		"erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.automatic_synchronization",
 		"erpnext.projects.doctype.project.project.project_status_update_reminder",

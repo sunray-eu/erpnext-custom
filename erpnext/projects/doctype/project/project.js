@@ -199,6 +199,9 @@ frappe.ui.form.on("Project", {
 				});
 		});
 	},
+
+	customer: add_project_users_from_customer,
+	project_name: generate_project_abbreviation,
 });
 
 function open_form(frm, doctype, child_doctype, parentfield) {
@@ -216,4 +219,85 @@ function open_form(frm, doctype, child_doctype, parentfield) {
 
 		frappe.ui.form.make_quick_entry(doctype, null, null, new_doc);
 	});
+}
+
+// function to add automatically project users to the project (access) from customer
+function add_project_users_from_customer(frm) {
+	if (frm.doc.customer) {
+		// Call server-side API to get contacts linked to the customer
+		frappe.call({
+			method: "erpnext.projects.doctype.project.project.get_customer_contacts",
+			args: {
+				customer_name: frm.doc.customer
+			},
+			callback: function(response) {
+				const contact_users = new Set(response.message || []);
+				const existing_users = new Set(frm.doc.users.map(user_row => user_row.user));
+
+				// Determine users to add and remove
+				const users_to_add = Array.from(contact_users).filter(user => !existing_users.has(user));
+				const users_to_remove = Array.from(existing_users).filter(user => !contact_users.has(user));
+
+				if (users_to_add.length > 0 || users_to_remove.length > 0) {
+					frappe.show_alert({
+						message: `Updating users: Adding ${users_to_add.join(", ")}, Removing ${users_to_remove.join(", ")}`,
+						indicator: "orange"
+					});
+
+					// Add new users
+					users_to_add.forEach(user => {
+						let new_row = frm.add_child("users");
+						new_row.user = user;
+					});
+
+					// Remove users who should no longer have access
+					frm.doc.users = frm.doc.users.filter(user_row => !users_to_remove.includes(user_row.user));
+
+					// Refresh the field to show updated values
+					frm.refresh_field("users");
+
+					frappe.show_alert({
+						message: `User access updated based on Customer selection.`,
+						indicator: "green"
+					});
+				} else {
+					frappe.show_alert({
+						message: `No changes needed for project user access.`,
+						indicator: "blue"
+					});
+				}
+			}
+		});
+	} else {
+		// Clear users table if no customer is selected
+		frm.clear_table("users");
+		frm.refresh_field("users");
+		frappe.show_alert({
+			message: "Cleared user access as no customer is selected.",
+			indicator: "orange"
+		});
+	}
+}
+
+// Function to generate project abbreviation based on project name
+function generate_project_abbreviation(frm) {
+	if (frm.doc.__islocal) {
+		// Generate intelligent abbreviation
+		const parts = frm.doc.project_name.split(/\s+/);
+		let abbr = "";
+
+		if (parts.length > 1) {
+			// For multi-word names, take the first letter of each word
+			abbr = parts
+				.map(word => word ? word.charAt(0).toUpperCase() : "")
+				.join("")
+				.slice(0, 3); // Limit abbreviation to 3 characters
+		} else {
+			// Single word, use up to 3 characters
+			abbr = parts[0].substring(0, 3).toUpperCase();
+		}
+
+		// Set the abbreviation to the custom field
+		frm.set_value("custom_abbr", abbr);
+	}
 }

@@ -37,6 +37,7 @@ class Project(Document):
 		copied_from: DF.Data | None
 		cost_center: DF.Link | None
 		customer: DF.Link | None
+		custom_abbr: DF.Data
 		daily_time_to_send: DF.Time | None
 		day_to_send: DF.Literal["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 		department: DF.Link | None
@@ -752,3 +753,75 @@ def recalculate_project_total_purchase_cost(project: str | None = None):
 			"total_purchase_cost",
 			(total_purchase_cost and total_purchase_cost[0][0] or 0),
 		)
+
+# Function to fetch all users linked to a customer, API endpoint
+@frappe.whitelist()
+def get_customer_contacts(
+	customer_name=None
+):
+	# Respond to /api/method/get_customer_contacts calls
+	if not customer_name and frappe.form_dict.get("customer_name"):
+		customer_name = frappe.form_dict["customer_name"]
+
+	if customer_name:
+		# Fetch all contacts linked to the specified customer
+		customer_contacts = frappe.get_all(
+			"Contact",
+			filters={
+				"link_doctype": "Customer",
+				"link_name": customer_name
+			},
+			fields=["user"]
+		)
+
+		# Extract and return users
+		users = [contact.user for contact in customer_contacts if contact.user]
+		frappe.response["message"] = users
+	else:
+		frappe.response["message"] = "Customer name not provided."
+
+# Function to sync project user access based on customer contacts
+def sync_project_user_access():
+    frappe.log(f"Starting project user access sync at {frappe.utils.nowtime()}")
+
+    # Fetch all customers
+    customers = frappe.get_all("Customer", fields=["name"])
+
+    for customer in customers:
+        # Fetch all contacts linked to the customer
+        customer_contacts = frappe.get_all(
+            "Contact", filters={"link_doctype": "Customer", "link_name": customer.name}, fields=["user"]
+        )
+        contact_users = {contact.user for contact in customer_contacts if contact.user}
+
+        # Fetch all projects for the customer
+        customer_projects = frappe.get_all("Project", filters={"customer": customer.name}, fields=["name"])
+
+        for project in customer_projects:
+            project_doc = frappe.get_doc("Project", project.name)
+            existing_users = {user.user for user in project_doc.users}
+
+            # Determine users to add and remove
+            users_to_add = contact_users - existing_users
+            users_to_remove = existing_users - contact_users
+
+            if users_to_add or users_to_remove:
+                frappe.log(f"Updating project '{project.name}': Adding {users_to_add}, Removing {users_to_remove}")
+
+                # Add missing users
+                for user in users_to_add:
+                    project_doc.append("users", {"user": user})
+
+                # Remove users who should no longer have access
+                project_doc.users = [
+                    user_row for user_row in project_doc.users if user_row.user not in users_to_remove
+                ]
+
+                # Save the changes to the project
+                project_doc.save()
+                frappe.log(f"Project '{project.name}' updated successfully.")
+            else:
+                frappe.log(f"No changes needed for project '{project.name}'.")
+
+    frappe.db.commit()
+    frappe.log(f"Project user access sync completed at {frappe.utils.nowtime()}")
