@@ -37,7 +37,7 @@ class Project(Document):
 		copied_from: DF.Data | None
 		cost_center: DF.Link | None
 		customer: DF.Link | None
-		custom_abbr: DF.Data
+		abbr: DF.Data
 		daily_time_to_send: DF.Time | None
 		day_to_send: DF.Literal["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 		department: DF.Link | None

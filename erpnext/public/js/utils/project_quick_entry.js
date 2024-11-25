@@ -12,7 +12,7 @@ frappe.ui.form.ProjectQuickEntryForm = class ProjectQuickEntryForm extends (
 
 		if (project_name_field) {
 			var me = this;
-			const abbr_field = this.dialog.get_field("custom_abbr");
+			const abbr_field = this.dialog.get_field("abbr");
 			project_name_field.$input.on("input", function(e) {
 				// Generate abbreviation dynamically as user types
 				const parts = project_name_field.get_value().split(/\s+/);

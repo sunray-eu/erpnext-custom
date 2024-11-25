@@ -298,6 +298,6 @@ function generate_project_abbreviation(frm) {
 		}
 
 		// Set the abbreviation to the custom field
-		frm.set_value("custom_abbr", abbr);
+		frm.set_value("abbr", abbr);
 	}
 }

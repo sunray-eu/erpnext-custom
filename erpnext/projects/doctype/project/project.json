@@ -10,7 +10,7 @@
  "field_order": [
   "naming_series",
   "project_name",
-  "custom_abbr",
+  "abbr",
   "status",
   "project_type",
   "is_active",
@@ -75,7 +75,7 @@
    "unique": 1
   },
   {
-    "fieldname": "custom_abbr",
+    "fieldname": "abbr",
     "fieldtype": "Data",
     "label": "Abbr",
     "unique": 1,
