@@ -51,7 +51,7 @@ class Project(Document):
 		holiday_list: DF.Link | None
 		is_active: DF.Literal["Yes", "No"]
 		message: DF.Text | None
-		naming_series: DF.Literal["PROJ-.####"]
+		naming_series: DF.Literal["PROJ-.{abbr}.-.####"]
 		notes: DF.TextEditor | None
 		per_gross_margin: DF.Percent
 		percent_complete: DF.Percent

@@ -7,7 +7,7 @@ def execute():
 	frappe.db.sql(
 		"""UPDATE `tabProject`
 		SET
-			naming_series = 'PROJ-.####'
+			naming_series = 'PROJ-.{abbr}.-.####'
 		WHERE
 			naming_series is NULL"""
 	)
