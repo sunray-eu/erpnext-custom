@@ -16,6 +16,8 @@
   "customer_name",
   "customer_type",
   "customer_group",
+  "company_id",
+  "registered_in",
   "column_break0",
   "territory",
   "gender",
@@ -59,6 +61,7 @@
   "tax_tab",
   "taxation_section",
   "tax_id",
+  "vat_id",
   "column_break_21",
   "tax_category",
   "tax_withholding_category",
@@ -142,7 +145,8 @@
    "fieldname": "default_bank_account",
    "fieldtype": "Link",
    "label": "Default Company Bank Account",
-   "options": "Bank Account"
+   "options": "Bank Account",
+   "search_index": 1
   },
   {
    "fieldname": "lead_name",
@@ -196,9 +200,13 @@
    "print_hide": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "tax_id",
    "fieldtype": "Data",
-   "label": "Tax ID"
+   "in_global_search": 1,
+   "label": "Tax ID",
+   "mandatory_depends_on": "eval:doc.customer_type === 'Company';",
+   "unique": 1
   },
   {
    "fieldname": "tax_category",
@@ -581,6 +589,31 @@
    "no_copy": 1,
    "options": "Prospect",
    "print_hide": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "description": "Company legal id",
+   "fieldname": "company_id",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "Company ID",
+   "mandatory_depends_on": "eval:doc.customer_type === 'Company';",
+   "unique": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "description": "Optional data for defining where the company is registered at (for example which city court)",
+   "fieldname": "registered_in",
+   "fieldtype": "Data",
+   "label": "Registered in"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "vat_id",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "VAT ID",
+   "unique": 1
   }
  ],
  "icon": "fa fa-user",
@@ -594,7 +627,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2024-06-17 03:24:59.612974",
+ "modified": "2024-12-08 23:03:00.731886",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",

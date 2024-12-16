@@ -11,14 +11,17 @@
  "field_order": [
   "details",
   "company_name",
+  "company_id",
   "abbr",
   "default_currency",
   "country",
   "is_group",
   "default_holiday_list",
   "cb0",
-  "default_letter_head",
+  "registered_in",
   "tax_id",
+  "vat_id",
+  "default_letter_head",
   "domain",
   "date_of_establishment",
   "parent_company",
@@ -38,6 +41,9 @@
   "lft",
   "rgt",
   "old_parent",
+  "column_break_efad",
+  "company_stamp",
+  "default_signature",
   "accounts_tab",
   "section_break_28",
   "create_chart_of_accounts_based_on",
@@ -275,9 +281,11 @@
    "options": "Company"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "tax_id",
    "fieldtype": "Data",
-   "label": "Tax ID"
+   "label": "Tax ID",
+   "unique": 1
   },
   {
    "fieldname": "date_of_establishment",
@@ -808,6 +816,43 @@
    "fieldtype": "Link",
    "label": "Round Off for Opening",
    "options": "Account"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "description": "Company legal id",
+   "fieldname": "company_id",
+   "fieldtype": "Data",
+   "label": "Company ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "description": "Optional data for defining where the company is registered at (for example which city court)",
+   "fieldname": "registered_in",
+   "fieldtype": "Data",
+   "label": "Registered in",
+   "translatable": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "vat_id",
+   "fieldtype": "Data",
+   "label": "VAT ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_efad",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_stamp",
+   "fieldtype": "Attach Image",
+   "label": "Company stamp"
+  },
+  {
+   "fieldname": "default_signature",
+   "fieldtype": "Signature",
+   "label": "Default signature"
   }
  ],
  "icon": "fa fa-building",
@@ -815,7 +860,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2024-08-02 11:34:46.785377",
+ "modified": "2024-12-08 21:54:43.271437",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

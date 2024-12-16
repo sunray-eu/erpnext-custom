@@ -37,8 +37,10 @@ class Company(NestedSet):
 		capital_work_in_progress_account: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
 		company_description: DF.TextEditor | None
+		company_id: DF.Data
 		company_logo: DF.AttachImage | None
 		company_name: DF.Data
+		company_stamp: DF.AttachImage | None
 		cost_center: DF.Link | None
 		country: DF.Link
 		create_chart_of_accounts_based_on: DF.Literal["", "Standard Template", "Existing Company"]
@@ -78,6 +80,8 @@ class Company(NestedSet):
 		exception_budget_approver_role: DF.Link | None
 		exchange_gain_loss_account: DF.Link | None
 		existing_company: DF.Link | None
+		expenses_included_in_asset_valuation: DF.Link | None
+		expenses_included_in_valuation: DF.Link | None
 		fax: DF.Data | None
 		is_group: DF.Check
 		lft: DF.Int
@@ -87,6 +91,7 @@ class Company(NestedSet):
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
 		reconcile_on_advance_payment_date: DF.Check
+		registered_in: DF.Data | None
 		registration_details: DF.Code | None
 		rgt: DF.Int
 		round_off_account: DF.Link | None
@@ -102,6 +107,7 @@ class Company(NestedSet):
 		transactions_annual_history: DF.Code | None
 		unrealized_exchange_gain_loss_account: DF.Link | None
 		unrealized_profit_loss_account: DF.Link | None
+		vat_id: DF.Data | None
 		website: DF.Data | None
 		write_off_account: DF.Link | None
 	# end: auto-generated types
